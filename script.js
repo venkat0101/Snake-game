@@ -73,17 +73,33 @@ function addToLeaderboard(playerName, newScore) {
     const lb = getLeaderboard();
     const now = new Date();
     const dateStr = `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}`;
-    lb.push({ name: playerName, score: newScore, date: dateStr });
+
+    // ── One entry per player: keep personal best only ──
+    const existingIdx = lb.findIndex(e => e.name.toLowerCase() === playerName.toLowerCase());
+    if (existingIdx !== -1) {
+        // Update only if the new score beats their existing best
+        if (newScore > lb[existingIdx].score) {
+            lb[existingIdx].score = newScore;
+            lb[existingIdx].date  = dateStr;
+        }
+        // If equal or lower — keep the existing record untouched
+    } else {
+        // Brand-new player → add entry
+        lb.push({ name: playerName, score: newScore, date: dateStr });
+    }
+
     lb.sort((a, b) => b.score - a.score);
     lb.splice(MAX_LB);
     saveLeaderboard(lb);
     return lb;
 }
 
-function isNewBest(newScore) {
+function isNewBest(playerName, newScore) {
     const lb = getLeaderboard();
-    if (lb.length === 0) return true;
-    return newScore >= lb[0].score;
+    // Check against this specific player's existing best
+    const existing = lb.find(e => e.name.toLowerCase() === playerName.toLowerCase());
+    if (!existing) return newScore > 0; // New player — any positive score is a best
+    return newScore > existing.score;
 }
 
 function renderLeaderboard(highlightEntry = null) {
@@ -329,8 +345,8 @@ function gameOver() {
     clearTimeout(gameLoopTimeout);
     playGameOverSound();
 
-    const wasBest = isNewBest(score);
-    const entry   = addToLeaderboard(currentPlayer, score);
+    const wasBest = isNewBest(currentPlayer, score);
+    addToLeaderboard(currentPlayer, score);
     renderLeaderboard({ name: currentPlayer, score });
 
     gameoverTitle.textContent = 'GAME OVER';
@@ -370,11 +386,32 @@ tryAgainBtn.addEventListener('click', () => {
     showNameModal(true); // isRetry = true
 });
 
-// Clear leaderboard
+// Clear leaderboard — two-click inline confirmation (avoids blocked confirm() dialogs)
+let clearPending = false;
+let clearTimer;
 clearLbBtn.addEventListener('click', () => {
-    if (confirm('Clear ALL scores from the leaderboard?')) {
+    if (!clearPending) {
+        // First click: ask for confirmation inline
+        clearPending = true;
+        clearLbBtn.textContent = 'Tap again to confirm';
+        clearLbBtn.style.borderColor = '#ff007b';
+        clearLbBtn.style.color = '#ff007b';
+        clearTimer = setTimeout(() => {
+            // Reset if user doesn't confirm within 3 s
+            clearPending = false;
+            clearLbBtn.textContent = 'Clear All Scores';
+            clearLbBtn.style.borderColor = '';
+            clearLbBtn.style.color = '';
+        }, 3000);
+    } else {
+        // Second click: actually clear
+        clearTimeout(clearTimer);
+        clearPending = false;
         localStorage.removeItem(LB_KEY);
         renderLeaderboard();
+        clearLbBtn.textContent = 'Clear All Scores';
+        clearLbBtn.style.borderColor = '';
+        clearLbBtn.style.color = '';
     }
 });
 
