@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vishanth Snake Game - Premium Arcade Experience</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <div class="title-section">
+                <h1>VISHANTH <span>SNAKE GAME</span></h1>
+            </div>
+            <div id="score-container" class="score-badge">
+                <span class="label">SCORE</span>
+                <span id="score-value">000</span>
+            </div>
+        </header>
+
+        <main>
+            <canvas id="gameCanvas"></canvas>
+            
+            <div id="overlay" class="overlay active">
+                <div class="overlay-content">
+                    <h2 id="overlay-title">READY?</h2>
+                    <p id="overlay-msg">Use Arrows/WASD or Click to Move</p>
+                    <button id="start-btn">START GAME</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="controls-hint">
+                <div class="hint">
+                    <span class="key">↑</span>
+                    <span class="key">←</span>
+                    <span class="key">↓</span>
+                    <span class="key">→</span>
+                    <span>Keyboard</span>
+                </div>
+                <div class="divider"></div>
+                <div class="hint">
+                    <span class="mouse-icon">🖱️</span>
+                    <span>Click Direction</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
