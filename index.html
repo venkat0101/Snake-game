@@ -17,23 +17,59 @@
         <div class="game-panel">
             <header>
                 <div class="title-section">
-                    <h1>SNAKE <span>GAME</span></h1>
+                    <!-- SNAKE is now cyan, GAME is white -->
+                    <h1><span>SNAKE</span> GAME</h1>
                     <p class="dev-credit">Developed by <strong>VISHANTH V</strong></p>
                 </div>
-                <div id="score-container" class="score-badge">
-                    <span class="label">SCORE</span>
-                    <span id="score-value">000</span>
+                <div class="header-right">
+                    <div id="player-badge" class="player-badge" style="display:none;">
+                        <span class="label">PLAYER</span>
+                        <span id="current-player-name">—</span>
+                    </div>
+                    <div id="score-container" class="score-badge">
+                        <span class="label">SCORE</span>
+                        <span id="score-value">000</span>
+                    </div>
                 </div>
             </header>
 
             <main>
                 <canvas id="gameCanvas"></canvas>
 
-                <div id="overlay" class="overlay active">
-                    <div class="overlay-content">
-                        <h2 id="overlay-title">READY?</h2>
-                        <p id="overlay-msg">Use Arrows/WASD or Click to Move</p>
+                <!-- Name Entry Modal (shown before game starts) -->
+                <div id="name-modal" class="overlay active">
+                    <div class="overlay-content name-modal-content">
+                        <div class="name-modal-icon">🐍</div>
+                        <h2 id="overlay-title">SNAKE GAME</h2>
+                        <p id="overlay-msg">Who's playing?</p>
+
+                        <div class="name-input-group">
+                            <input
+                                type="text"
+                                id="player-name-input"
+                                class="name-input"
+                                placeholder="Enter your name..."
+                                maxlength="20"
+                                autocomplete="off"
+                            />
+                        </div>
+
+                        <!-- Existing players dropdown -->
+                        <div id="existing-players-wrap" class="existing-players-wrap" style="display:none;">
+                            <p class="existing-label">— or pick a returning player —</p>
+                            <div id="existing-players" class="existing-players-list"></div>
+                        </div>
+
                         <button id="start-btn">START GAME</button>
+                    </div>
+                </div>
+
+                <!-- Game Over / Pause overlay (hidden initially) -->
+                <div id="overlay" class="overlay">
+                    <div class="overlay-content">
+                        <h2 id="gameover-title">GAME OVER</h2>
+                        <p id="gameover-msg"></p>
+                        <button id="try-again-btn">TRY AGAIN</button>
                     </div>
                 </div>
             </main>
@@ -69,7 +105,7 @@
             </ol>
 
             <div class="lb-footer">
-                <button id="clear-lb-btn">Clear Scores</button>
+                <button id="clear-lb-btn">Clear All Scores</button>
             </div>
         </aside>
 

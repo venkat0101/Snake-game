@@ -76,10 +76,12 @@ h1 {
     font-size: 2.6rem;
     font-weight: 700;
     letter-spacing: 3px;
+    /* GAME is white (default) */
     color: var(--text-primary);
     line-height: 1;
 }
 
+/* SNAKE is now cyan */
 h1 span {
     color: var(--accent-color);
     text-shadow: 0 0 16px var(--accent-glow), 0 0 40px var(--accent-glow);
@@ -92,9 +94,47 @@ h1 span {
     text-transform: uppercase;
 }
 
+/* VISHANTH V is now white */
 .dev-credit strong {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+/* ── Header Right (player + score) ── */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ── Player Badge ── */
+.player-badge {
+    background: var(--glass-bg);
+    border: 1px solid rgba(0, 242, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 10px 18px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.player-badge .label {
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+}
+
+#current-player-name {
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
     color: var(--accent-color);
-    font-weight: 600;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* ── Score Badge ── */
@@ -145,15 +185,15 @@ main {
     display: block;
 }
 
-/* ── Overlay ── */
+/* ════════════════════════════════
+   OVERLAYS (shared base)
+   ════════════════════════════════ */
 .overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.82);
-    backdrop-filter: blur(10px);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -172,15 +212,34 @@ main {
     text-align: center;
     transform: translateY(24px);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 100%;
+    max-width: 380px;
+    padding: 0 24px;
 }
 
 .overlay.active .overlay-content {
     transform: translateY(0);
 }
 
-#overlay-title {
-    font-size: 3.5rem;
+/* ── Name Entry Modal ── */
+.name-modal-content {
+    max-width: 420px;
+}
+
+.name-modal-icon {
+    font-size: 3rem;
     margin-bottom: 12px;
+    animation: bounce-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bounce-in {
+    from { transform: scale(0.3); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+
+#overlay-title {
+    font-size: 2.8rem;
+    margin-bottom: 6px;
     font-family: 'Space Grotesk', sans-serif;
     background: linear-gradient(to bottom, #fff 30%, #555);
     -webkit-background-clip: text;
@@ -189,16 +248,89 @@ main {
 
 #overlay-msg {
     color: var(--text-secondary);
-    margin-bottom: 32px;
+    margin-bottom: 28px;
     font-size: 1rem;
     letter-spacing: 0.5px;
 }
 
-#start-btn {
+/* ── Name Input ── */
+.name-input-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.name-input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(0,242,255,0.3);
+    border-radius: 14px;
+    padding: 14px 20px;
+    font-size: 1.05rem;
+    font-family: 'Space Grotesk', sans-serif;
+    color: #fff;
+    outline: none;
+    text-align: center;
+    letter-spacing: 1px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.name-input::placeholder {
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.5px;
+}
+
+.name-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(0,242,255,0.15), 0 0 20px rgba(0,242,255,0.1);
+}
+
+/* ── Existing Players ── */
+.existing-players-wrap {
+    margin-bottom: 24px;
+}
+
+.existing-label {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.existing-players-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.player-chip {
+    background: rgba(0,242,255,0.08);
+    border: 1px solid rgba(0,242,255,0.25);
+    border-radius: 50px;
+    padding: 7px 16px;
+    font-size: 0.82rem;
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--accent-color);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.player-chip:hover,
+.player-chip.selected {
+    background: rgba(0,242,255,0.18);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 12px rgba(0,242,255,0.2);
+    transform: translateY(-1px);
+}
+
+/* ── START / TRY AGAIN Button ── */
+#start-btn,
+#try-again-btn {
     background: var(--accent-color);
     color: #000;
     border: none;
-    padding: 16px 48px;
+    padding: 16px 52px;
     font-size: 1.1rem;
     font-weight: 700;
     letter-spacing: 1.5px;
@@ -209,9 +341,28 @@ main {
     font-family: 'Space Grotesk', sans-serif;
 }
 
-#start-btn:hover {
+#start-btn:hover,
+#try-again-btn:hover {
     transform: scale(1.06);
     box-shadow: 0 0 36px var(--accent-glow), 0 0 80px var(--accent-glow);
+}
+
+/* ── Game Over Overlay ── */
+#gameover-title {
+    font-size: 3.5rem;
+    margin-bottom: 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    background: linear-gradient(to bottom, #fff 30%, #555);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#gameover-msg {
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    line-height: 1.6;
 }
 
 /* ── Footer Controls ── */
@@ -284,7 +435,7 @@ footer {
 
 @keyframes trophy-pulse {
     0%, 100% { filter: drop-shadow(0 0 12px rgba(255,215,0,0.6)); }
-    50% { filter: drop-shadow(0 0 24px rgba(255,215,0,0.9)); }
+    50%       { filter: drop-shadow(0 0 24px rgba(255,215,0,0.9)); }
 }
 
 .lb-header h2 {
@@ -306,7 +457,7 @@ footer {
     list-style: none;
     flex: 1;
     overflow-y: auto;
-    padding: 16px 0;
+    padding: 12px 0;
     scrollbar-width: thin;
     scrollbar-color: rgba(255,255,255,0.1) transparent;
 }
@@ -318,8 +469,8 @@ footer {
 .lb-entry {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 11px 20px;
+    gap: 12px;
+    padding: 10px 18px;
     transition: background 0.2s ease;
     border-bottom: 1px solid rgba(255,255,255,0.03);
     animation: lb-slide-in 0.3s ease backwards;
@@ -330,15 +481,13 @@ footer {
     to   { opacity: 1; transform: translateX(0); }
 }
 
-.lb-entry:hover {
-    background: rgba(255,255,255,0.04);
-}
+.lb-entry:hover { background: rgba(255,255,255,0.04); }
 
 .lb-rank {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 700;
-    min-width: 30px;
+    min-width: 32px;
     text-align: center;
 }
 
@@ -353,22 +502,31 @@ footer {
 }
 
 .lb-name {
-    font-size: 0.82rem;
-    color: var(--text-secondary);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.lb-score {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--accent-color);
+.lb-date {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-top: 1px;
 }
 
-.lb-medal {
-    font-size: 1.1rem;
+.lb-score {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    flex-shrink: 0;
+}
+
+.lb-score.highlight {
+    color: var(--gold);
+    text-shadow: 0 0 12px rgba(255,215,0,0.7);
 }
 
 .lb-empty {
@@ -376,7 +534,7 @@ footer {
     text-align: center;
     color: var(--text-secondary);
     font-size: 0.85rem;
-    line-height: 1.8;
+    line-height: 2;
 }
 
 /* ── LB Footer ── */
@@ -405,26 +563,6 @@ footer {
     color: #ff007b;
 }
 
-/* ── New Best Flash ── */
-.new-best-banner {
-    background: linear-gradient(90deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
-    border: 1px solid rgba(255,215,0,0.3);
-    border-radius: 10px;
-    padding: 10px 16px;
-    text-align: center;
-    color: var(--gold);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    animation: flash-in 0.5s ease;
-    margin-bottom: 16px;
-}
-
-@keyframes flash-in {
-    from { opacity: 0; transform: scale(0.9); }
-    to   { opacity: 1; transform: scale(1); }
-}
-
 /* ── Responsive ── */
 @media (max-width: 900px) {
     body { overflow: auto; }
@@ -444,5 +582,5 @@ footer {
 
 @media (max-width: 480px) {
     h1 { font-size: 1.6rem; }
-    #overlay-title { font-size: 2.4rem; }
+    #overlay-title, #gameover-title { font-size: 2.2rem; }
 }
