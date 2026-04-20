@@ -386,33 +386,10 @@ tryAgainBtn.addEventListener('click', () => {
     showNameModal(true); // isRetry = true
 });
 
-// Clear leaderboard — two-click inline confirmation (avoids blocked confirm() dialogs)
-let clearPending = false;
-let clearTimer;
+// Clear leaderboard — single click, immediate
 clearLbBtn.addEventListener('click', () => {
-    if (!clearPending) {
-        // First click: ask for confirmation inline
-        clearPending = true;
-        clearLbBtn.textContent = 'Tap again to confirm';
-        clearLbBtn.style.borderColor = '#ff007b';
-        clearLbBtn.style.color = '#ff007b';
-        clearTimer = setTimeout(() => {
-            // Reset if user doesn't confirm within 3 s
-            clearPending = false;
-            clearLbBtn.textContent = 'Clear All Scores';
-            clearLbBtn.style.borderColor = '';
-            clearLbBtn.style.color = '';
-        }, 3000);
-    } else {
-        // Second click: actually clear
-        clearTimeout(clearTimer);
-        clearPending = false;
-        localStorage.removeItem(LB_KEY);
-        renderLeaderboard();
-        clearLbBtn.textContent = 'Clear All Scores';
-        clearLbBtn.style.borderColor = '';
-        clearLbBtn.style.color = '';
-    }
+    localStorage.removeItem(LB_KEY);
+    renderLeaderboard();
 });
 
 // Keyboard controls
