@@ -2,14 +2,19 @@
     --bg-color: #050505;
     --accent-color: #00f2ff;
     --accent-glow: rgba(0, 242, 255, 0.5);
+    --accent2: #7c3aed;
+    --accent2-glow: rgba(124, 58, 237, 0.5);
     --snake-head: #00f2ff;
     --snake-body: #0088ff;
     --food-color: #ff007b;
     --food-glow: rgba(255, 0, 123, 0.6);
     --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
+    --text-secondary: #9ca3af;
     --glass-bg: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.1);
+    --gold: #ffd700;
+    --silver: #c0c0c0;
+    --bronze: #cd7f32;
 }
 
 * {
@@ -21,74 +26,117 @@
 
 body {
     background-color: var(--bg-color);
+    background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(124, 58, 237, 0.07) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 70%, rgba(0, 242, 255, 0.07) 0%, transparent 60%);
     color: var(--text-primary);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
 }
 
-.game-container {
-    width: 100%;
-    max-width: 800px;
+/* ── Page Layout ── */
+.page-wrapper {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
+    gap: 28px;
+    align-items: flex-start;
+    padding: 24px;
+    max-width: 1300px;
+    width: 100%;
 }
 
+/* ── Game Panel ── */
+.game-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+}
+
+/* ── Header ── */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.title-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 h1 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 2px;
+    font-size: 2.6rem;
+    font-weight: 700;
+    letter-spacing: 3px;
     color: var(--text-primary);
+    line-height: 1;
 }
 
 h1 span {
     color: var(--accent-color);
-    text-shadow: 0 0 10px var(--accent-glow);
+    text-shadow: 0 0 16px var(--accent-glow), 0 0 40px var(--accent-glow);
 }
 
+.dev-credit {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.dev-credit strong {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+/* ── Score Badge ── */
 .score-badge {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(10px);
-    padding: 10px 20px;
-    border-radius: 12px;
+    padding: 12px 24px;
+    border-radius: 14px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    gap: 2px;
 }
 
 .score-badge .label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: var(--text-secondary);
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 }
 
 #score-value {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 700;
     font-family: 'Space Grotesk', sans-serif;
     color: var(--accent-color);
+    text-shadow: 0 0 10px var(--accent-glow);
 }
 
+/* ── Game Canvas Area ── */
 main {
     position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: #0a0a0a;
+    background: #090910;
     border: 1px solid var(--glass-border);
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    box-shadow:
+        0 0 0 1px rgba(0,242,255,0.08),
+        0 0 60px rgba(0,0,0,0.6),
+        inset 0 0 80px rgba(0,0,0,0.3);
 }
 
 #gameCanvas {
@@ -97,14 +145,15 @@ main {
     display: block;
 }
 
+/* ── Overlay ── */
 .overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -121,7 +170,7 @@ main {
 
 .overlay-content {
     text-align: center;
-    transform: translateY(20px);
+    transform: translateY(24px);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -130,37 +179,42 @@ main {
 }
 
 #overlay-title {
-    font-size: 3rem;
-    margin-bottom: 10px;
+    font-size: 3.5rem;
+    margin-bottom: 12px;
     font-family: 'Space Grotesk', sans-serif;
-    background: linear-gradient(to bottom, #fff, #888);
+    background: linear-gradient(to bottom, #fff 30%, #555);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 #overlay-msg {
     color: var(--text-secondary);
-    margin-bottom: 30px;
+    margin-bottom: 32px;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
 }
 
 #start-btn {
     background: var(--accent-color);
     color: #000;
     border: none;
-    padding: 15px 40px;
+    padding: 16px 48px;
     font-size: 1.1rem;
     font-weight: 700;
+    letter-spacing: 1.5px;
     border-radius: 50px;
     cursor: pointer;
-    box-shadow: 0 0 20px var(--accent-glow);
+    box-shadow: 0 0 24px var(--accent-glow), 0 0 60px var(--accent-glow);
     transition: all 0.2s ease;
+    font-family: 'Space Grotesk', sans-serif;
 }
 
 #start-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 30px var(--accent-glow);
+    transform: scale(1.06);
+    box-shadow: 0 0 36px var(--accent-glow), 0 0 80px var(--accent-glow);
 }
 
+/* ── Footer Controls ── */
 footer {
     display: flex;
     justify-content: center;
@@ -183,24 +237,212 @@ footer {
 .key {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 4px 9px;
+    border-radius: 5px;
     font-size: 0.8rem;
     color: #fff;
 }
 
 .divider {
     width: 1px;
-    height: 20px;
+    height: 22px;
     background: var(--glass-border);
 }
 
+/* ════════════════════════════════
+   LEADERBOARD PANEL
+   ════════════════════════════════ */
+.leaderboard-panel {
+    width: 300px;
+    flex-shrink: 0;
+    background: rgba(10, 10, 20, 0.7);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    backdrop-filter: blur(12px);
+    box-shadow:
+        0 0 0 1px rgba(124,58,237,0.1),
+        0 0 50px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    align-self: stretch;
+}
+
+.lb-header {
+    padding: 28px 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--glass-border);
+    background: linear-gradient(180deg, rgba(124,58,237,0.1) 0%, transparent 100%);
+}
+
+.trophy-icon {
+    font-size: 2.8rem;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 12px rgba(255,215,0,0.6));
+    animation: trophy-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes trophy-pulse {
+    0%, 100% { filter: drop-shadow(0 0 12px rgba(255,215,0,0.6)); }
+    50% { filter: drop-shadow(0 0 24px rgba(255,215,0,0.9)); }
+}
+
+.lb-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.lb-sub {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+}
+
+/* ── Leaderboard List ── */
+.lb-list {
+    list-style: none;
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+.lb-list::-webkit-scrollbar { width: 4px; }
+.lb-list::-webkit-scrollbar-track { background: transparent; }
+.lb-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+.lb-entry {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 20px;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    animation: lb-slide-in 0.3s ease backwards;
+}
+
+@keyframes lb-slide-in {
+    from { opacity: 0; transform: translateX(16px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.lb-entry:hover {
+    background: rgba(255,255,255,0.04);
+}
+
+.lb-rank {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    min-width: 30px;
+    text-align: center;
+}
+
+.lb-rank.gold   { color: var(--gold);   text-shadow: 0 0 8px rgba(255,215,0,0.6); }
+.lb-rank.silver { color: var(--silver); text-shadow: 0 0 8px rgba(192,192,192,0.5); }
+.lb-rank.bronze { color: var(--bronze); text-shadow: 0 0 8px rgba(205,127,50,0.5); }
+.lb-rank.other  { color: var(--text-secondary); }
+
+.lb-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.lb-name {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lb-score {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.lb-medal {
+    font-size: 1.1rem;
+}
+
+.lb-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.8;
+}
+
+/* ── LB Footer ── */
+.lb-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--glass-border);
+}
+
+#clear-lb-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255, 0, 123, 0.3);
+    color: rgba(255, 0, 123, 0.7);
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Outfit', sans-serif;
+}
+
+#clear-lb-btn:hover {
+    background: rgba(255, 0, 123, 0.1);
+    border-color: rgba(255, 0, 123, 0.6);
+    color: #ff007b;
+}
+
+/* ── New Best Flash ── */
+.new-best-banner {
+    background: linear-gradient(90deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 10px;
+    padding: 10px 16px;
+    text-align: center;
+    color: var(--gold);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    animation: flash-in 0.5s ease;
+    margin-bottom: 16px;
+}
+
+@keyframes flash-in {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    body { overflow: auto; }
+    .page-wrapper {
+        flex-direction: column;
+        align-items: center;
+        padding: 16px;
+    }
+    .leaderboard-panel {
+        width: 100%;
+        max-width: 600px;
+        align-self: auto;
+    }
+    .game-panel { width: 100%; max-width: 600px; }
+    h1 { font-size: 2rem; }
+}
+
 @media (max-width: 480px) {
-    .game-container {
-        padding: 10px;
-    }
-    
-    #overlay-title {
-        font-size: 2rem;
-    }
+    h1 { font-size: 1.6rem; }
+    #overlay-title { font-size: 2.4rem; }
 }

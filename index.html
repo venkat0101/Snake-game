@@ -3,52 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vishanth Snake Game - Premium Arcade Experience</title>
+    <title>Snake Game — Developed by VISHANTH V</title>
+    <meta name="description" content="A premium Snake Game experience developed by VISHANTH V.">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="game-container">
-        <header>
-            <div class="title-section">
-                <h1>VISHANTH <span>SNAKE GAME</span></h1>
-            </div>
-            <div id="score-container" class="score-badge">
-                <span class="label">SCORE</span>
-                <span id="score-value">000</span>
-            </div>
-        </header>
+    <div class="page-wrapper">
 
-        <main>
-            <canvas id="gameCanvas"></canvas>
-            
-            <div id="overlay" class="overlay active">
-                <div class="overlay-content">
-                    <h2 id="overlay-title">READY?</h2>
-                    <p id="overlay-msg">Use Arrows/WASD or Click to Move</p>
-                    <button id="start-btn">START GAME</button>
+        <!-- LEFT: Game Panel -->
+        <div class="game-panel">
+            <header>
+                <div class="title-section">
+                    <h1>SNAKE <span>GAME</span></h1>
+                    <p class="dev-credit">Developed by <strong>VISHANTH V</strong></p>
                 </div>
-            </div>
-        </main>
+                <div id="score-container" class="score-badge">
+                    <span class="label">SCORE</span>
+                    <span id="score-value">000</span>
+                </div>
+            </header>
 
-        <footer>
-            <div class="controls-hint">
-                <div class="hint">
-                    <span class="key">↑</span>
-                    <span class="key">←</span>
-                    <span class="key">↓</span>
-                    <span class="key">→</span>
-                    <span>Keyboard</span>
+            <main>
+                <canvas id="gameCanvas"></canvas>
+
+                <div id="overlay" class="overlay active">
+                    <div class="overlay-content">
+                        <h2 id="overlay-title">READY?</h2>
+                        <p id="overlay-msg">Use Arrows/WASD or Click to Move</p>
+                        <button id="start-btn">START GAME</button>
+                    </div>
                 </div>
-                <div class="divider"></div>
-                <div class="hint">
-                    <span class="mouse-icon">🖱️</span>
-                    <span>Click Direction</span>
+            </main>
+
+            <footer>
+                <div class="controls-hint">
+                    <div class="hint">
+                        <span class="key">↑</span>
+                        <span class="key">←</span>
+                        <span class="key">↓</span>
+                        <span class="key">→</span>
+                        <span>Keyboard</span>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="hint">
+                        <span class="mouse-icon">🖱️</span>
+                        <span>Click Direction</span>
+                    </div>
                 </div>
+            </footer>
+        </div>
+
+        <!-- RIGHT: Leaderboard Panel -->
+        <aside class="leaderboard-panel">
+            <div class="lb-header">
+                <div class="trophy-icon">🏆</div>
+                <h2>LEADERBOARD</h2>
+                <p class="lb-sub">Top 10 High Scores</p>
             </div>
-        </footer>
+
+            <ol class="lb-list" id="lb-list">
+                <!-- Populated by JS -->
+            </ol>
+
+            <div class="lb-footer">
+                <button id="clear-lb-btn">Clear Scores</button>
+            </div>
+        </aside>
+
     </div>
     <script src="script.js"></script>
 </body>
