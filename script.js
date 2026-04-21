@@ -23,10 +23,21 @@ const currentPlayerSpan = document.getElementById('current-player-name');
 const lbList    = document.getElementById('lb-list');
 const clearLbBtn = document.getElementById('clear-lb-btn');
 
+// ── Device Detection ──
+const isMobile = () => window.innerWidth <= 768 || ('ontouchstart' in window);
+
 // ── Game Constants ──
-const GRID_SIZE = 22;
+const GRID_SIZE = 20;     // tile size in canvas pixels
 let TILE_COUNT  = 0;
-let SPEED       = 100;
+let SPEED       = 100;    // ms per move (overridden at game start)
+
+// ── Speed settings per device ──
+const SPEED_PC_START    = 100;   // ms — PC starting speed
+const SPEED_MOBILE_START = 160;  // ms — mobile starting speed (slower = easier to control)
+const SPEED_MIN_PC      = 50;    // fastest on PC
+const SPEED_MIN_MOBILE  = 100;   // fastest on mobile
+const SPEED_STEP_PC     = 1;     // ms decrease per food eaten on PC
+const SPEED_STEP_MOBILE = 0;     // no speed increase on mobile (stays constant)
 
 // ── Game State ──
 let snake = [];
@@ -228,10 +239,11 @@ function playGameOverSound() {
 // GAME INIT & LOOP
 // ════════════════════════════════
 function initGame() {
+    // Recalculate canvas size from its CSS-rendered dimensions
     const rect = canvas.getBoundingClientRect();
-    const size = Math.round(rect.width);
-    canvas.width  = size || 700;
-    canvas.height = size || 700;
+    const size = Math.round(Math.min(rect.width, rect.height));
+    canvas.width  = size > 0 ? size : 500;
+    canvas.height = canvas.width;
     TILE_COUNT = Math.floor(canvas.width / GRID_SIZE);
 
     snake = [
@@ -278,7 +290,10 @@ function gameLoop() {
         updateScore();
         playEatSound();
         spawnFood();
-        if (SPEED > 50) SPEED -= 1;
+        // Speed up — but only on PC; mobile stays constant for playability
+        const minSpeed = isMobile() ? SPEED_MIN_MOBILE : SPEED_MIN_PC;
+        const step     = isMobile() ? SPEED_STEP_MOBILE : SPEED_STEP_PC;
+        if (SPEED > minSpeed) SPEED -= step;
     } else {
         snake.pop();
     }
@@ -361,7 +376,8 @@ function beginGame() {
     overlay.classList.remove('active');
     initGame();
     gameRunning = true;
-    SPEED = 100;
+    // Set speed based on device
+    SPEED = isMobile() ? SPEED_MOBILE_START : SPEED_PC_START;
     gameLoop();
 }
 
@@ -430,3 +446,15 @@ initGame();
 draw();
 renderLeaderboard();
 showNameModal(false); // Show name modal on page load
+
+// Re-init canvas size on orientation change / window resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        if (!gameRunning) {
+            initGame();
+            draw();
+        }
+    }, 200);
+});
